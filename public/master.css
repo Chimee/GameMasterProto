@@ -1,0 +1,58 @@
+.timebox {
+    margin-top:10px;
+    border: #000000 medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align:center;
+        position:relative;
+}
+
+[id=clicks]{
+	
+	color:red;
+	
+	font-size:200%;
+	
+}
+
+[id=hintssent]{
+	
+	color:black;
+	
+	font-size:250%;
+	
+}
+
+[id=hintsused]{
+	
+	color:black;
+	
+	font-size:150%;
+	
+}
+.hintbox {
+    margin-top:10px;
+    border: #000000 medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align:center;
+        position:relative;
+}
+
+.mediasel {
+    margin-top:10px;
+    border: #000000 medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align:center;
+    position:relative;
+}
+
+
+h4 {
+	color:green;
+	text-align:center;
+}

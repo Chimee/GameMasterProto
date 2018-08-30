@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="/room.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery-countdown/dist/jquery.countdown.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<meta charset="utf-8"> 
+
+
+  </head>
+  <body background="tomb.jpg">
+		
+      <h1>You Have Entered The Ancient Crypt Of College Station!</h1>
+
+    
+
+<div class="container">
+ <div class="jumbotron">
+         
+		
+    <h2>Time Remaining</h2> 
+     <div id="timer"></div>
+     
+  </div>
+</div>
+
+
+<div class="container">
+
+
+ <div id="vid">
+
+	<video autoplay class ="video" />
+
+</div>
+</div>
+
+
+    
+
+	
+	    <script>
+      var socket = io.connect();
+
+   // Turn on Bootstrap
+	  $('[data-toggle="tooltip"]').tooltip();
+      socket.on('starttimer', function(){
+          
+
+    	  // Get 1 hour from Timer Start Button Press from Room Master Page 
+    	  function get1HourFromNow() {
+    	    return new Date(new Date().valueOf() + 60 * 60 * 1000);
+    	  }
+
+    	  var $timer = $('#timer');
+		
+		//Initiate Timer
+    	  $timer.countdown(get1HourFromNow(), function(event) {
+    	    $(this).html(event.strftime('%H:%M:%S'));
+    	  });
+
+      
+     
+    	//Listeners for timer functions from room master
+
+    	socket.on('resettimer', function(){
+    			console.log("Resetting Timer");
+
+    	    $timer.countdown(get1HourFromNow());
+
+    	        });
+    		
+    	socket.on('pausetimer', function (b) {
+    	                console.log("Game Master Paused Timer");
+    			
+    			    $timer.countdown('pause');
+
+    					
+    	                           });	
+
+    	socket.on('startcount', function () {
+    	                console.log("Game Master Startted Timer");
+    			
+    			
+    			
+    			$("#timer").countdown('start');
+    					Pausing
+    	                           });	
+    				   
+    	socket.on('stoptimer', function () {
+    	                console.log("Game Master Stopped Timer");
+    			
+    			
+    			
+    			$("#timer").countdown('stop');
+    					
+    	                           });				   
+    				   
+    	socket.on('resumetimer', function () {
+    	                console.log("Game Master Resumed Timer");
+    			
+    		    $timer.countdown('resume');
+
+    					
+    	                           });				   
+
+    	});
+            
+      
+	//append media sent from room master to video tag on room page
+     	    
+       socket.on('playmedia', function (themedia) {
+                console.log("Playing: " + themedia);
+
+		$('#vid').text()
+		$('.video').attr('src', themedia)
+		alert(themedia)
+
+	});
+	    
+	// Video And Audio Controls 
+   socket.on('pausevid', function () {
+                console.log("Pausing Video");
+
+		
+		$('video').trigger('pause');
+
+		
+
+	});	
+	
+   socket.on('resumevid', function () {
+                console.log("Resuming Video");
+
+
+		$('video').trigger('play');
+		
+		
+
+	});		
+
+	    
+
+
+
+
+
+
+
+
+
+    </script>
+  </body>
+</html>

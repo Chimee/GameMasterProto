@@ -1,0 +1,31 @@
+h2{
+	
+	text-align:center;
+        position:relative;
+        color:white;
+}
+
+
+h1{
+	color:white;
+	text-align:center;
+        position:relative;
+}
+
+[id=timer] {
+	font-size:500%;
+	color:red;
+	text-align:center;
+    position:relative;
+}
+
+[id=vid] {
+	
+	text-align:center;
+    position:relative;
+}
+
+
+[class=jumbotron]{
+	background-color:black;
+}

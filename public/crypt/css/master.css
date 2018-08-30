@@ -1,0 +1,36 @@
+.timebox {
+    margin-top:10px;
+    border: #000000 medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align:center;
+        position:relative;
+}
+
+
+.hintbox {
+    margin-top:10px;
+    border: #000000 medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align:center;
+        position:relative;
+}
+
+.mediasel {
+    margin-top:10px;
+    border: #000000 medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align:center;
+    position:relative;
+}
+
+
+h4 {
+	color:green;
+	text-align:center;
+}

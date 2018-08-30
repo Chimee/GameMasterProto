@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ <link rel="stylesheet" href="/master.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/jquery-countdown/dist/jquery.countdown.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  	    <meta charset="utf-8"> 
+
+</head>
+  <body style="background-color:gray;">
+  <div class="container">
+<div class="jumbotron">
+<p>Welcome To The Game Control Station!</p>
+<div class="form-group">
+  <label for="roomrecon">Select Room Configuration</label>
+  <select class="form-control" id="roomrecon">
+    <option>Crypt</option>
+    <option>Train</option>
+    <option>Facility</option>
+    
+  </select>
+  <a href="#" class="download-csv">Reconfigure Room</a>
+    	<div>		
+     <button type="button" class="btn btn-primary" id="readfiles">
+      Read Room File List
+    </button>
+    </div>
+</div>
+</div>
+</div>
+  
+  
+  <div class ="container-fluid">
+  	<div class="row content">
+  		<div class="col-sm-3 sidenav">
+  			<div class="timebox">
+  			<h4><font color = "green"> Game Timer Controls</font></h4>
+  			
+    <div>
+      <button type="button" class="btn btn-default" id="btn-start">
+        <i class="glyphicon glyphicon-play"></i>
+        Start Timer
+      </button>
+    </div>
+    
+    
+  	<div>		
+     <button type="button" class="btn btn-primary" id="btn-reset">
+      <i class="glyphicon glyphicon-repeat"></i>
+      Reset Timer
+    </button>
+    </div>
+    
+	<div>
+	
+	<button type="button" class="btn btn-default" id="btn-pause">
+      <i class="glyphicon glyphicon-pause"></i>
+        Pause
+      </button>
+	</div>
+	
+	<div>
+	<button type="button" class="btn btn-default" id="btn-resume">
+        <i class="glyphicon glyphicon-play"></i>
+        Resume
+      </button>
+    </div>
+    </div>
+	</div>
+
+
+
+<div class="col-sm-6">
+	
+<div class="mediasel">	
+<h4>Select Media To Send</h4><br>
+	<input type="text" list="mediachoices" id="media">
+	<datalist id="mediachoices">
+			  <option value="Intro">
+			  <option value="Hint1">
+			  <option value="Hint2">
+			  <option value="Hint3">
+			  <option value="Audio1">
+			  <option value="Audio2">
+			  <option value="Audio3">
+			  <option value="Video1">
+			  <option value="Video2">
+			  <option value="Video3">
+			  <option value="Sawclip3.mp4">
+			  <option value="sawclip2.mp4">
+			  <option value="Sawclipintro.mp4">
+	</datalist>	
+    <input type="submit" onclick="sendmedia();" />
+	<div>
+	<p id="hintssent" >Hints Sent: <a id="clicks">0</a></p>
+	<p id="hintsused" >Hints Used: </p>
+	</div>
+    </div>
+</div>
+
+<div class="col-sm-3">
+	<div class="hintbox">
+	<h4><font color = "green">Game Media Controls</font></h4>
+	<div>
+	<button id="pausevideo"><i class="glyphicon glyphicon-pause"></i>Pause Media</button>	
+	<button id="resumevideo"><i class="glyphicon glyphicon-play"></i>Resume Media</button>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+
+
+
+	   <script>
+      var socket = io.connect();
+
+	  var clicks = 0;
+      function sendmedia(){
+    	  var themedia = document.getElementById("media").value;
+    	  alert('Sending: ' + themedia);
+    	  
+    	  socket.emit('sendtoclient', themedia);
+		  
+    	 		  
+		  clicks += 1;
+		  document.getElementById("clicks").innerHTML = clicks;
+		  
+		  
+		//Log hints thats have been used by adding text node and linebreak to separate entries
+		  
+		  var hintsused = document.getElementById("hintsused"); 
+		  var linebreak = document.createElement('br');
+		    hintsused.appendChild(document.createTextNode(themedia));
+		    hintsused.appendChild(linebreak);
+      }
+
+      $(document).off('click', '#readfiles').on('click', '#readfiles', function () {
+            console.log('reading file list');
+            socket.emit('publist');
+            alert('Reading File Lists');
+	    
+      });
+      
+      var roomfiles;
+	  var clist;
+	  var tlist;
+	  var flist;
+     
+      socket.on('cryptlist', function(cryptlist){
+    	  
+    	   clist = cryptlist;
+    	 	  	 
+		 alert('Crypt List: ' + cryptlist);
+  	     		  	  
+		 var que = Array.isArray(cryptlist);
+		  		  
+		  alert('is cryptlist an array? ' + que);
+		  		 		  
+      });
+      
+      socket.on('tlist', function(trainlist){
+    	  
+    	   tlist = trainlist;
+	 	 
+    	  alert('Train List: ' + trainlist);
+  	     		  	  
+		 var que = Array.isArray(trainlist);
+		  		  
+		  alert('is trainlist an array? ' + que);
+		  		 		  
+      });
+
+      socket.on('faclist', function(facilitylist){
+    	  
+    	   flist = facilitylist;
+    	  
+    	  alert('Facility List: ' + facilitylist);
+  	     		  	  
+		 var que = Array.isArray(facilitylist);
+		  		  
+		  alert('is roomfiles an array? ' + que);
+		  		 		  
+      });
+ 
+$('a.download-csv').on('click', function(){
+	
+	
+	var roomcon = document.getElementById("roomrecon").value;
+	alert('Room Config Selected: ' + roomcon);
+	
+	if (roomcon == 'Crypt') {
+		alert(clist)
+		roomfiles = clist;
+		
+	} else if (roomcon =='Facility'){
+		
+		roomfiles = flist;
+		
+	} else if (roomcon == 'Train'){
+		
+		roomfiles = tlist;
+		
+	}
+	
+    alert(roomfiles);
+	
+    roomfiles.forEach(function(files){
+    if(files.length == 0) return;
+    file = files
+    var theAnchor = $('<a />')
+        .attr('href', '/' + roomcon + '/' + file) // downloads files from selected room configuration
+        .attr('download', file)
+        // Firefox does not fires click if the link is outside
+        // the DOM
+        .appendTo('body');
+   
+    theAnchor[0].click(); 
+    theAnchor.remove();
+    
+});
+	
+});
+
+ 			   
+//////////////////////////	
+$(document).off('click', '#btn-start').on('click', '#btn-start', function () {
+            console.log('Game Master Start Initial Timer');
+            socket.emit('begintime');
+            
+
+      });
+ 
+
+socket.on('starttimer', function () {
+                console.log("Game Master Start Initial Timer");
+                           });
+
+/////////////////////////
+			   
+			   
+			   
+$(document).off('click', '#btn-reset').on('click', '#btn-reset', function () {
+            console.log('Timer reset button clicked');
+            socket.emit('resettime');
+            
+
+      });
+      
+socket.on('resettimer', function () {
+                console.log("Game Master Reset Timer");
+                           });			   
+			   
+
+///////////////////////// 
+$(document).off('click', '#btn-pause').on('click', '#btn-pause', function () {
+            console.log('Timer pause button clicked');
+            socket.emit('pausetime');
+            
+
+      });
+
+socket.on('pausetime', function () {
+                console.log("Game Master Paused Timer");
+                           });
+			   
+
+
+//////////////////////////////////
+   
+ 
+
+//////////////////////////////////
+   
+$(document).off('click', '#stoptimer').on('click', '#stoptimer', function () {
+            console.log('Timer stop button clicked');
+            socket.emit('stopcount');
+            
+
+      });
+      
+socket.on('stoptimer', function () {
+                console.log("Game Master Stopped Timer");
+                           });	   
+   
+//////////////////////////////////
+   
+$(document).off('click', '#btn-resume').on('click', '#btn-resume', function () {
+            console.log('Timer Resume button clicked');
+            socket.emit('resumecount');
+            
+
+      });
+      
+socket.on('resumetimer', function () {
+                console.log("Game Master Resumed Timer");
+                           });	   
+
+   //////////////////////////////////
+   
+$(document).off('click', '#pausevideo').on('click', '#pausevideo', function () {
+            console.log('video pause button clicked');
+            socket.emit('pausevideo');
+            
+
+      });
+      //////////////////////////////////
+   
+$(document).off('click', '#resumevideo').on('click', '#resumevideo', function () {
+            console.log('Video Resume button clicked');
+            socket.emit('resumevideo');
+            
+
+      });
+         
+     
+    </script>
+  </body>
+</html>
